@@ -5,33 +5,33 @@ namespace Pt;
 class Common
 {
 
-    protected $_logger;
-    protected $_pre_error_message;
+    protected $logger = null;
+    protected $prefixError = null;
 
 
     public function __construct($logger = null)
     {
-        $this->_logger = $logger;
-        $this->_prefix_error = "";
+        $this->logger = $logger;
+        $this->prefixError = "";
     }
 
 
-    public function _log($level, $message)
+    public function log($level, $message)
     {
-        if (!is_null($this->_logger)) {
+        if (!is_null($this->logger)) {
             foreach (explode("\n", trim($message)) as $line) {
-                $this->_logger->$level("{$this->_prefix_error} $line");
+                $this->logger->$level("{$this->prefixError} $line");
             }
         }
     }
 
 
-    protected function _sort_args($args)
+    protected function sortArgs($args)
     {
         ksort($args);
         foreach ($args as $key => $value) {
             if (is_array($value)) {
-                $args[$key] = $this->_sort_args($value);
+                $args[$key] = $this->sort_args($value);
             }
             if (is_object($value)) {
                 $args[$key] = "Object: (".spl_object_hash($value).")";
@@ -41,7 +41,7 @@ class Common
     }
 
 
-    protected function _get_hash($args)
+    protected function getHash($args)
     {
         return md5(print_r($args, true));
     }

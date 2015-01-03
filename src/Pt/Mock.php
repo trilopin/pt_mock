@@ -5,71 +5,71 @@ namespace Pt;
 class Mock extends Common
 {
 
-    private static $_mocks = array();
-    private $_name;
-    private $_expects;
-    private $_stubs;
-    private $_errors = array();
+    private static $mocks = array();
+    private $name;
+    private $expects;
+    private $stubs;
+    private $errors = array();
 
 
     public function __construct($name, $logger = null)
     {
         parent::__construct($logger);
 
-        $this->_name = $name;
-        $this->_expects = array();
-        $this->_stubs = array();
-        $this->_prefix_error = "mock [{$name}]: ";
-        self::$_mocks[] = $this;
+        $this->name = $name;
+        $this->expects = array();
+        $this->stubs = array();
+        $this->prefixError = "mock [{$name}]: ";
+        self::$mocks[] = $this;
     }
 
 
     public function expects($method_name)
     {
-        $this->_log('debug', "Defined ({$method_name}) as expectation");
-        $expect = new Expectation($this->_name, $method_name, $this->_logger);
-        $this->_expects[$method_name][] = $expect;
+        $this->log('debug', "Defined ({$method_name}) as expectation");
+        $expect = new Expectation($this->name, $method_name, $this->logger);
+        $this->expects[$method_name][] = $expect;
         return $expect;
     }
 
 
     public function stubs($method_name)
     {
-        $this->_log('debug', "Defined ({$method_name}) as stub");
-        $stub = new Stub($this->_name, $method_name, $this->_logger);
-        $this->_stubs[$method_name][] = $stub;
+        $this->log('debug', "Defined ({$method_name}) as stub");
+        $stub = new Stub($this->name, $method_name, $this->logger);
+        $this->stubs[$method_name][] = $stub;
         return $stub;
     }
 
 
-    public static function reset_all()
+    public static function resetAll()
     {
-        foreach (self::$_mocks as $mock) {
+        foreach (self::$mocks as $mock) {
             $mock->reset();
         }
-        self::$_mocks = array();
+        self::$mocks = array();
     }
 
 
     public function reset()
     {
-        $this->_expects = array();
-        $this->_stubs = array();
-        $this->_errors = array();
+        $this->expects = array();
+        $this->stubs = array();
+        $this->errors = array();
     }
 
 
-    public static function verify_all()
+    public static function verifyAll()
     {
         $errors = array();
-        foreach (self::$_mocks as $mock) {
+        foreach (self::$mocks as $mock) {
             try {
                 $mock->verify();
             } catch (MockException $e) {
                 $errors[] = $e->getMessage();
             }
         }
-        self::reset_all();
+        self::resetAll();
 
         if (count($errors) > 0) {
             throw new MockException(implode("\n", $errors));
@@ -81,21 +81,21 @@ class Mock extends Common
 
     public function verify()
     {
-        foreach ($this->_expects as $method_name => $expectations) {
+        foreach ($this->expects as $method_name => $expectations) {
             foreach ($expectations as $expect) {
                 try {
                     $expect->verify();
                 } catch (MockException $e) {
-                    $this->_errors[] = $e->getMessage();
+                    $this->errors[] = $e->getMessage();
                 }
             }
         }
 
-        if (count($this->_errors) > 0) {
-            $this->_log('info', "Does not verify");
-            throw new MockException(implode("\n", $this->_errors));
+        if (count($this->errors) > 0) {
+            $this->log('info', "Does not verify");
+            throw new MockException(implode("\n", $this->errors));
         } else {
-            $this->_log('info', "Verify");
+            $this->log('info', "Verify");
             return true;
         }
     }
@@ -103,23 +103,23 @@ class Mock extends Common
 
     public function __call($name, $args)
     {
-        $args = $this->_sort_args($args);
-        $hash = count($args) ? $this->_get_hash($args) : '_null_';
+        $args = $this->sortArgs($args);
+        $hash = count($args) ? $this->getHash($args) : '_null_';
 
-        $this->_log("debug", "Received call for method ({$name}) with args ($hash):\n".print_r($args, true));
+        $this->log("debug", "Received call for method ({$name}) with args ($hash):\n".print_r($args, true));
 
         $options = array();
 
-        if (isset($this->_stubs[$name])) {
-            foreach (array_reverse($this->_stubs[$name]) as $stub) {
-                $stub_hash = is_null($stub->_get_args_hash()) ? '_null_' : $stub->_get_args_hash();
+        if (isset($this->stubs[$name])) {
+            foreach (array_reverse($this->stubs[$name]) as $stub) {
+                $stub_hash = is_null($stub->getArgsHash()) ? '_null_' : $stub->getArgsHash();
                 $options[$stub_hash] = $stub;
             }
         }
 
-        if (isset($this->_expects[$name])) {
-            foreach (array_reverse($this->_expects[$name]) as $expect) {
-                $expect_hash = is_null($expect->_get_args_hash()) ? '_null_' : $expect->_get_args_hash();
+        if (isset($this->expects[$name])) {
+            foreach (array_reverse($this->expects[$name]) as $expect) {
+                $expect_hash = is_null($expect->getArgsHash()) ? '_null_' : $expect->getArgsHash();
                 if (!$expect->is_matched()) {
                     $options[$expect_hash] = $expect;
                 }
@@ -128,33 +128,33 @@ class Mock extends Common
 
         try {
             if (isset($options[$hash])) {
-                return $options[$hash]->_get_result_of_call();
+                return $options[$hash]->getResultOfCall();
             }
             if (isset($options['_null_'])) {
-                return $options['_null_']->_get_result_of_call();
+                return $options['_null_']->getResultOfCall();
             }
 
             if (count($options) === 0) {
-                $message = "[{$this->_name}]\n\nCannot find any stub or expecation for call [{$name}] with arguments:\n".print_r($args, true);
-                $this->_errors[] = "[{$this->_name}]: {$message}";
+                $message = "[{$this->name}]\n\nCannot find any stub or expecation for call [{$name}] with arguments:\n".print_r($args, true);
+                $this->errors[] = "[{$this->name}]: {$message}";
                 throw new MockException($message);
             } elseif (count($options) === 1) {
                 $option = array_shift($options);
-                $message = "[{$this->_name}]\n\nExpected parameters for [{$name}]:\n".print_r($option->_get_args(), true)."\n But received :".print_r($args, true);
-                $this->_errors[] = "[{$this->_name}]: {$message}";
+                $message = "[{$this->name}]\n\nExpected parameters for [{$name}]:\n".print_r($option->getArgs(), true)."\n But received :".print_r($args, true);
+                $this->errors[] = "[{$this->name}]: {$message}";
                 throw new MockException($message);
             } else {
-                $message  = "[{$this->_name}]\n\nCannot match any stub or expecation for call [{$name}] with arguments:\n".print_r($args, true)."\n";
+                $message  = "[{$this->name}]\n\nCannot match any stub or expecation for call [{$name}] with arguments:\n".print_r($args, true)."\n";
                 $message .= "Similar expectations are :\n";
                 foreach ($options as $option) {
-                    $message .= get_class($option)." with args:\n".print_r($option->_get_args(), true)."\n";
+                    $message .= get_class($option)." with args:\n".print_r($option->getArgs(), true)."\n";
                 }
 
-                $this->_errors[] = "[{$this->_name}]: {$message}";
+                $this->errors[] = "[{$this->name}]: {$message}";
                 throw new MockException($message);
             }
         } catch (MockException $e) {
-            $this->_log('err', $e->getMessage());
+            $this->log('err', $e->getMessage());
             throw $e;
         }
     }

@@ -8,7 +8,7 @@ class MockTest extends \PHPUnit_Framework_TestCase
 
   public function tearDown()
   {
-      Mock::reset_all();
+      Mock::resetAll();
   }
 
 
@@ -97,7 +97,7 @@ Array
         $mock->stubs('method')->with("param1", "param2", "param3")->returns("adios");
 
         $this->assertEquals("hola", $mock->method("param1"));
-        $this->assertTrue(Mock::verify_all());
+        $this->assertTrue(Mock::verifyAll());
     }
 
 
@@ -110,7 +110,7 @@ Array
 
         $this->setExpectedException('\Pt\MockException', "[Test]\n\nMethod (method) expected to be called 1 times, but called 0");
         $this->assertEquals("hola", $mock->method("param1"));
-        $this->assertFalse(Mock::verify_all());
+        $this->assertFalse(Mock::verifyAll());
     }
 
 
@@ -156,6 +156,6 @@ Array
         $mock->expects('method')->returns("adios");
 
         $this->assertEquals("adios", $mock->method());
-        $this->assertTrue(Mock::verify_all());
+        $this->assertTrue(Mock::verifyAll());
     }
 }
