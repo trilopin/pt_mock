@@ -20,17 +20,9 @@ Array
 (
 )
 ";
-
         $mock = new Mock('Test');
-
-        try {
-            $mock->any_non_declared_method();
-        } catch (MockException $e) {
-            $this->assertEquals($error, $e->getMessage());
-            return true;
-        }
-
-        $this->fail("Exception expected");
+        $this->setExpectedException('\Pt\MockException', $error);
+        $mock->any_non_declared_method();
     }
 
     public function test_calling_mock_with_stub_but_bad_arguments()
@@ -53,14 +45,8 @@ Array
         $mock = new Mock('Test');
         $mock->stubs('method')->with("param1", "param2")->returns("hola");
 
-        try {
-            $mock->method("param1");
-        } catch (MockException $e) {
-            $this->assertEquals($error, $e->getMessage());
-            return true;
-        }
-
-        $this->fail("Exception expected");
+        $this->setExpectedException('\Pt\MockException', $error);
+        $mock->method("param1");
     }
 
 
@@ -97,14 +83,9 @@ Array
         $mock->stubs('method')->with("param1", "param2")->returns("hola");
         $mock->stubs('method')->with("param1", "param2", "param3")->returns("adios");
 
-        try {
-            $mock->method("param1");
-        } catch (MockException $e) {
-            $this->assertEquals($error, $e->getMessage());
-            return true;
-        }
+        $this->setExpectedException('\Pt\MockException', $error);
+        $mock->method("param1");
 
-        $this->fail("Exception expected");
     }
 
 
@@ -127,14 +108,9 @@ Array
         $mock->stubs('method')->returns("hola");
         $mock->expects('method')->with("param1", "param2", "param3")->returns("adios");
 
+        $this->setExpectedException('\Pt\MockException', "[Test]\n\nMethod (method) expected to be called 1 times, but called 0");
         $this->assertEquals("hola", $mock->method("param1"));
-        try {
-            $this->assertFalse(Mock::verify_all());
-        } catch (MockException $e) {
-            $this->assertEquals("[Test]\n\nMethod (method) expected to be called 1 times, but called 0", $e->getMessage());
-            return true;
-        }
-        $this->fail("Exception expected");
+        $this->assertFalse(Mock::verify_all());
     }
 
 
@@ -157,14 +133,8 @@ Array
         $mock->expects('method')->with("param1")->times(2)->returns("adios");
 
         $this->assertEquals("adios", $mock->method("param1"));
-        try {
-            $mock->verify();
-        } catch (MockException $e) {
-            $this->assertEquals("[Test]\n\nMethod (method) expected to be called 2 times, but called 1", $e->getMessage());
-            return true;
-        }
-
-        $this->fail("Exception expected");
+        $this->setExpectedException('\Pt\MockException', "[Test]\n\nMethod (method) expected to be called 2 times, but called 1");
+        $mock->verify();
     }
 
 
@@ -174,13 +144,8 @@ Array
         $mock = new Mock('Test');
         $mock->expects('method')->with("param1")->never()->returns("adios");
 
-        try {
-            $mock->method("param1");
-        } catch (MockException $e) {
-            $this->assertEquals("[Test]\n\nMethod (method) called but is expected to not be called", $e->getMessage());
-            return true;
-        }
-        $this->fail("Exception expected");
+        $this->setExpectedException('\Pt\MockException', "[Test]\n\nMethod (method) called but is expected to not be called");
+        $mock->method("param1");
     }
 
 
