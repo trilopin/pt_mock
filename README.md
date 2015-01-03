@@ -1,3 +1,5 @@
+![travis](https://travis-ci.org/trilopin/pt_mock.svg?branch=master)
+![appveyor](https://ci.appveyor.com/api/projects/status/pp3dthsbli5ysk7y?svg=true)
 
 pt_mock
 --------------------------------------------------------------------------------
@@ -39,7 +41,7 @@ and we expect that it returns 'b'.
 To check that all expectations have been accomplished :
 
     $class_b->verify();     // for a instance of pt_mock
-    pt_mock::verify_all();  // for all mocks instantiated 
+    pt_mock::verify_all();  // for all mocks instantiated
 
 
 If you want to test that the method is called two times:
@@ -72,7 +74,7 @@ And sometimes you want to raise a exception instead of to return data.
 Credits
 --------------------------------------------------------------------------------
 
-Thanks a lot to Mathias Biilmann [http://mathias-biilmann.net/] by the original 
+Thanks a lot to Mathias Biilmann [http://mathias-biilmann.net/] by the original
 idea. Was a awesome experience work together !
 
 
