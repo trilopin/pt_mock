@@ -1,6 +1,6 @@
 {
     "name": "trilopin/ptmock",
-    "type": "application",
+    "type": "library",
     "description": "Easy mock for php testing",
     "license": "MIT",
     "authors": [
