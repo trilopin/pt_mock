@@ -31,7 +31,7 @@ class Common
         ksort($args);
         foreach ($args as $key => $value) {
             if (is_array($value)) {
-                $args[$key] = $this->sort_args($value);
+                $args[$key] = $this->sortArgs($value);
             }
             if (is_object($value)) {
                 $args[$key] = "Object: (".spl_object_hash($value).")";
