@@ -4,7 +4,7 @@
 pt_mock
 --------------------------------------------------------------------------------
 
-This class works with PHP 5.x.
+This class works with PHP >= 5.3.6.
 In order to run the tests, phpunit is required.
 
 This class provides a way to mock objects when testing. Makes it simple to
@@ -23,6 +23,7 @@ We have a method class that receives a object as parameter. Inside this method
 we will call the object method 'method_mock' with parameter 'a'
 and we expect that it returns 'b'.
 
+```php
     class class_a {
 
         function my_method(class_b) {
@@ -31,35 +32,36 @@ and we expect that it returns 'b'.
 
     }
 
-    $class_b = new pt_mock('Class B');
+    $class_b = new \Pt\Mock('Class B');
     $class_b->expects('method_mock')->with('a')->returns('b');
 
     $class_a = new class_a();
     echo $class_a->my_method($class_b);  // ----> 'b'
-
+```
 
 To check that all expectations have been accomplished :
 
     $class_b->verify();     // for a instance of pt_mock
-    pt_mock::verify_all();  // for all mocks instantiated
+    \Pt\Mock::verifyAll();  // for all mocks instantiated
 
 
 If you want to test that the method is called two times:
 
+```php
     $class_b->expects('method_mock')->with('a')->times(2)->returns('b');
-
+```
 
 Sometimes you don't want to test if a method is called, you only want that if a
 method is called the mock object returns a value based on parameters.
 
-
+```php
     $class_b->stubs('method_mock')->with('a')->returns('b');
 
     echo $class_b->method_mock('a') ---> 'b'
     echo $class_b->method_mock('a') ---> 'b'
     echo $class_b->method_mock('a') ---> 'b'
     echo $class_b->method_mock('a') ---> 'b'
-    .......
+```
 
 
 And sometimes you want to raise a exception instead of to return data.
