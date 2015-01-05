@@ -17,3 +17,8 @@ script:
     - vendor/bin/php-cs-fixer fix --dry-run -v --diff
     - wget https://scrutinizer-ci.com/ocular.phar
     - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+matrix:
+  exclude:
+    - php: hhvm
+      script: php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+
