@@ -24,20 +24,20 @@ class Mock extends Common
     }
 
 
-    public function expects($method_name)
+    public function expects($methodName)
     {
-        $this->log('debug', "Defined ({$method_name}) as expectation");
-        $expect = new Expectation($this->name, $method_name, $this->logger);
-        $this->expects[$method_name][] = $expect;
+        $this->log('debug', "Defined ({$methodName}) as expectation");
+        $expect = new Expectation($this->name, $methodName, $this->logger);
+        $this->expects[$methodName][] = $expect;
         return $expect;
     }
 
 
-    public function stubs($method_name)
+    public function stubs($methodName)
     {
-        $this->log('debug', "Defined ({$method_name}) as stub");
-        $stub = new Stub($this->name, $method_name, $this->logger);
-        $this->stubs[$method_name][] = $stub;
+        $this->log('debug', "Defined ({$methodName}) as stub");
+        $stub = new Stub($this->name, $methodName, $this->logger);
+        $this->stubs[$methodName][] = $stub;
         return $stub;
     }
 
@@ -81,7 +81,7 @@ class Mock extends Common
 
     public function verify()
     {
-        foreach ($this->expects as $method_name => $expectations) {
+        foreach ($this->expects as $methodName => $expectations) {
             foreach ($expectations as $expect) {
                 try {
                     $expect->verify();
@@ -120,7 +120,7 @@ class Mock extends Common
         if (isset($this->expects[$name])) {
             foreach (array_reverse($this->expects[$name]) as $expect) {
                 $expect_hash = is_null($expect->getArgsHash()) ? '_null_' : $expect->getArgsHash();
-                if (!$expect->is_matched()) {
+                if (!$expect->isMatched()) {
                     $options[$expect_hash] = $expect;
                 }
             }

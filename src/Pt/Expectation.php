@@ -6,15 +6,15 @@ class Expectation extends Stub
 {
 
     private $times;
-    private $expected_times;
+    private $expectedTimes;
 
 
-    public function __construct($mock_name, $method_name, $logger = null)
+    public function __construct($mockName, $methodName, $logger = null)
     {
-        parent::__construct($mock_name, $method_name, $logger);
-        $this->prefixError = "Expectation [$method_name]: ";
+        parent::__construct($mockName, $methodName, $logger);
+        $this->prefixError = "Expectation [$methodName]: ";
         $this->times = 1;
-        $this->expected_times = 1;
+        $this->expectedTimes = 1;
     }
 
 
@@ -22,7 +22,7 @@ class Expectation extends Stub
     {
         if ($times > 0) {
             $this->times = $times;
-            $this->expected_times = $times;
+            $this->expectedTimes = $times;
         }
         return $this;
     }
@@ -31,12 +31,12 @@ class Expectation extends Stub
     public function never()
     {
         $this->times = null;
-        $this->expected_times = null;
+        $this->expectedTimes = null;
         return $this;
     }
 
 
-    public function is_matched()
+    public function isMatched()
     {
         if ($this->times === 0) {
             return true;
@@ -48,12 +48,12 @@ class Expectation extends Stub
     public function getResultOfCall()
     {
         if (is_null($this->times)) {
-            $message = "[{$this->mock_name}]\n\nMethod ({$this->method_name}) called but is expected to not be called";
+            $message = "[{$this->mockName}]\n\nMethod ({$this->methodName}) called but is expected to not be called";
             $this->log("err", $message);
             $this->errors[] = $message;
             throw new MockException($message);
         } elseif ($this->times === 0) {
-            $message = "[{$this->mock_name}]\n\nMethod ({$this->method_name}) expected to be called {$this->times} times but called at least one more";
+            $message = "[{$this->mockName}]\n\nMethod ({$this->methodName}) expected to be called {$this->times} times but called at least one more";
             $this->log("err", $message);
             $this->errors[] = $message;
             throw new MockException($message);
@@ -67,8 +67,8 @@ class Expectation extends Stub
     public function verify()
     {
         if ($this->times >= 1) {
-            $times_called = $this->expected_times - $this->times;
-            $message = "[{$this->mock_name}]\n\nMethod ({$this->method_name}) expected to be called {$this->expected_times} times, but called {$times_called}";
+            $timesCalled = $this->expectedTimes - $this->times;
+            $message = "[{$this->mockName}]\n\nMethod ({$this->methodName}) expected to be called {$this->expectedTimes} times, but called {$timesCalled}";
             $this->log("err", $message);
             throw new MockException($message);
         }

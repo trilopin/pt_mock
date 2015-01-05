@@ -5,24 +5,24 @@ namespace Pt;
 class Stub extends Common
 {
 
-    protected $mock_name;
-    protected $method_name;
+    protected $mockName;
+    protected $methodName;
     protected $args;
     protected $hash;
-    protected $value_to_return;
-    protected $exception_to_raise;
+    protected $valueToReturn;
+    protected $exceptionToRaise;
 
 
-    public function __construct($mock_name, $method_name, $logger = null)
+    public function __construct($mockName, $methodName, $logger = null)
     {
         parent::__construct($logger);
-        $this->mock_name = $mock_name;
-        $this->method_name = $method_name;
+        $this->mockName = $mockName;
+        $this->methodName = $methodName;
         $this->args = null;
         $this->hash = null;
-        $this->value_to_return = null;
-        $this->exception_to_raise = null;
-        $this->prefixError = "Stub [$method_name]: ";
+        $this->valueToReturn = null;
+        $this->exceptionToRaise = null;
+        $this->prefixError = "Stub [$methodName]: ";
     }
 
 
@@ -38,27 +38,27 @@ class Stub extends Common
 
     public function returns($value)
     {
-        $this->value_to_return = $value;
+        $this->valueToReturn = $value;
         return $this;
     }
 
 
     public function raises($exception)
     {
-        $this->exception_to_raise = $exception;
+        $this->exceptionToRaise = $exception;
         return $this;
     }
 
 
     public function getResultOfCall()
     {
-        if (!is_null($this->value_to_return)) {
-            $response = is_object($this->value_to_return) ? "Object:".spl_object_hash($this->value_to_return) : print_r($this->value_to_return, true);
+        if (!is_null($this->valueToReturn)) {
+            $response = is_object($this->valueToReturn) ? "Object:".spl_object_hash($this->valueToReturn) : print_r($this->valueToReturn, true);
             $this->log("debug", "Response is: ".$response);
-            return $this->value_to_return;
-        } elseif (!is_null($this->exception_to_raise)) {
-            $this->log("debug", "Raises exception [".get_class($this->exception_to_raise)."]:".$this->exception_to_raise->getMessage());
-            throw $this->exception_to_raise;
+            return $this->valueToReturn;
+        } elseif (!is_null($this->exceptionToRaise)) {
+            $this->log("debug", "Raises exception [".get_class($this->exceptionToRaise)."]:".$this->exceptionToRaise->getMessage());
+            throw $this->exceptionToRaise;
         } else {
             $this->log("debug", "Response is: null");
             return null;
