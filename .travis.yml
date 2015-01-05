@@ -13,6 +13,7 @@ install:
     - travis_retry composer install --no-interaction --prefer-source
 
 script:
-    - phpunit --verbose
-
-
+    - phpunit --coverage-text --coverage-clover=coverage.clover
+    - vendor/bin/php-cs-fixer fix --dry-run -v --diff
+    - wget https://scrutinizer-ci.com/ocular.phar
+    - php ocular.phar code-coverage:upload --format=php-clover coverage.clover

@@ -85,7 +85,6 @@ Array
 
         $this->setExpectedException('\Pt\MockException', $error);
         $mock->method("param1");
-
     }
 
 
