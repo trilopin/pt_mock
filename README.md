@@ -1,5 +1,7 @@
-![travis](https://travis-ci.org/trilopin/pt_mock.svg?branch=master)
-![appveyor](https://ci.appveyor.com/api/projects/status/pp3dthsbli5ysk7y?svg=true)
+[![travis](https://travis-ci.org/trilopin/pt_mock)](https://travis-ci.org/trilopin/pt_mock.svg?branch=master)
+[![appveyor](https://ci.appveyor.com/project/trilopin/pt-mock)](https://ci.appveyor.com/api/projects/status/pp3dthsbli5ysk7y?svg=true)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/trilopin/pt_mock/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/trilopin/pt_mock/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/trilopin/pt_mock/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/trilopin/pt_mock/?branch=master)
 
 pt_mock
 --------------------------------------------------------------------------------
