@@ -1,5 +1,5 @@
 {
-    "name": "trilopin/ptmock",
+    "name": "trilopin/pt_mock",
     "type": "library",
     "description": "Easy mock for php testing",
     "license": "MIT",
